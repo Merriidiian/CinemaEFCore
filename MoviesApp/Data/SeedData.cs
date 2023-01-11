@@ -10,9 +10,9 @@ namespace MoviesApp.Data
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            Console.WriteLine("Seeding Database");
-            using (var context =
-                   new MoviesContext(serviceProvider.GetRequiredService<DbContextOptions<MoviesContext>>()))
+            using (var context = new MoviesContext(
+                       serviceProvider.GetRequiredService<
+                           DbContextOptions<MoviesContext>>()))
             {
                 // Look for any movies.
                 if (context.Actors.Any())
