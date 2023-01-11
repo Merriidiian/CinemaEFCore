@@ -21,10 +21,9 @@ namespace MoviesApp.Middleware
             _next = next;
         }
         
-        //Следим только за ActorsController
-        public async Task Invoke(HttpContext httpContext, ILogger<ActorsController> logger)
+        public async Task Invoke(HttpContext httpContext, ILogger<HomeController> logger)
         {
-            logger.LogTrace($"Request: {httpContext.Request.Path}  Method: {httpContext.Request.Method} Query: {(httpContext.Request.Query)}");
+            logger.LogTrace($"Request: {httpContext.Request.Path}  Method: {httpContext.Request.Method}\n");
             await _next(httpContext);
         }
     }

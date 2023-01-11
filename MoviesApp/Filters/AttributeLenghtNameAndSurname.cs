@@ -13,8 +13,8 @@ namespace MoviesApp.Filters
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            int lenght = value.ToString().Length;
-            if (lenght <= 4)
+            int length = value.ToString().Length;
+            if (length < 4)
             {
                 return new ValidationResult(GetErrorMessage());
             }

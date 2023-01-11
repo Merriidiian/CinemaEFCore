@@ -7,7 +7,8 @@ namespace MoviesApp.Middleware
         public static IApplicationBuilder UseRequestLog(
             this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<RequestLogMiddleware>();
+            return builder.UseMiddleware<ActorControllerLoggerMiddleware>();
+            //return builder.UseMiddleware<RequestLogMiddleware>();
         }
     }
 }
