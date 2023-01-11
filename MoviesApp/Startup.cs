@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MoviesApp.Data;
 using MoviesApp.Middleware;
+using MoviesApp.Models;
+using MoviesApp.Services;
 
 namespace MoviesApp
 {
@@ -33,9 +36,20 @@ namespace MoviesApp
 
             services.AddDbContext<MoviesContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MoviesContext")));
-            
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+            }).AddEntityFrameworkStores<MoviesContext>()
+                .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider);
+                
             //Подключаем AutoMapper
             services.AddAutoMapper(typeof(Startup));
+            
+            //Подключаем сервис (ДТО) на фильмы
+            services.AddScoped<IMovieService, MovieService>();
+            
+            //Подключаем сервис (ДТО) на актеров
+            services.AddScoped<IActorService, ActorService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,7 +65,7 @@ namespace MoviesApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
             
             
