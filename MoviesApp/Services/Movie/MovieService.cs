@@ -31,6 +31,7 @@ namespace MoviesApp.Services
 
         public MovieDto UpdateMovie(MovieDto movieDto)
         {
+            
             if (movieDto.Id == null)
             {
                 //упрощение для примера

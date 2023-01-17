@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MoviesApp.Filters;
@@ -12,18 +13,17 @@ namespace MoviesApp.Controllers
     public class MoviesController: Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IMapper _mapper;
         private readonly IMovieService _service;
 
-        public MoviesController(ILogger<HomeController> logger, IMapper mapper, IMovieService service)
+        public MoviesController(ILogger<HomeController> logger, IMovieService service)
         {
             _logger = logger;
-            _mapper = mapper;
             _service = service;
         }
 
         // GET: Movies
         [HttpGet]
+        [Authorize]
         public IActionResult Index()
         {
             var movies = _service.GetAllMovies();
@@ -32,6 +32,7 @@ namespace MoviesApp.Controllers
 
         // GET: Movies/Details/5
         [HttpGet]
+        [Authorize]
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -51,6 +52,7 @@ namespace MoviesApp.Controllers
         
         // GET: Movies/Create
         [HttpGet]
+        [Authorize(Roles = "Admin")] 
         public IActionResult Create()
         {
             return View();
@@ -62,6 +64,7 @@ namespace MoviesApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [EnsureReleaseDateBeforeNow]
+        [Authorize(Roles = "Admin")] 
         public IActionResult Create([Bind("Title,ReleaseDate,Genre,Price")] MovieDto inputModel)
         {
             if (ModelState.IsValid)
@@ -73,6 +76,7 @@ namespace MoviesApp.Controllers
         }
         
         [HttpGet]
+        [Authorize(Roles = "Admin")] 
         // GET: Movies/Edit/5
         public IActionResult Edit(int? id)
         {
@@ -96,6 +100,7 @@ namespace MoviesApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id, [Bind("Title,ReleaseDate,Genre,Price")] MovieDto editModel)
         {
             if (ModelState.IsValid)
@@ -113,6 +118,7 @@ namespace MoviesApp.Controllers
         }
         
         [HttpGet]
+        [Authorize(Roles = "Admin")] 
         // GET: Movies/Delete/5
         public IActionResult Delete(int? id)
         {
@@ -133,6 +139,7 @@ namespace MoviesApp.Controllers
         
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
